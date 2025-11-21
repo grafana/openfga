@@ -62,7 +62,10 @@ type ClientConfig struct {
 }
 
 func NewClient(config ClientConfig) (*Client, error) {
-	grpcOpts := []grpc.DialOption{}
+	grpcOpts := []grpc.DialOption{
+		grpc.WithChainUnaryInterceptor(UnaryClientInterceptor),
+		grpc.WithChainStreamInterceptor(StreamClientInterceptor),
+	}
 
 	if config.KeepaliveTime > 0 {
 		grpcOpts = append(grpcOpts, grpc.WithKeepaliveParams(keepalive.ClientParameters{
